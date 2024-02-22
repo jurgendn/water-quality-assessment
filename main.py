@@ -2,11 +2,12 @@ import os
 import pickle
 
 from pytorch_lightning import Trainer
-from config import DataLoader, ModelConfigs, TrainerConfigs, DataPath
+from pytorch_lightning.loggers import NeptuneLogger
+
 from components.callbacks import early_stopping
 from components.data_module import WaterQualityDataModule
+from config import DataLoader, DataPath, ModelConfigs, TrainerConfigs
 from models.model_lit import LitModule
-from pytorch_lightning.loggers import NeptuneLogger
 
 
 def train():
