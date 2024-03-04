@@ -10,12 +10,7 @@ services:
       - ./.env
     volumes:
       - ./data:/home/working/data:ro
-
-    # This part is used to enable GPU support
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      - ./:/home/working/
+    working_dir: /home/working
+    tty: true
+    stdin_open: true

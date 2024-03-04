@@ -6,4 +6,5 @@ RUN apt-get install -y cmake build-essential
 COPY requirements.txt /tmp/requirements.txt
 
 RUN pip install --upgrade pip
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install -r /tmp/requirements.txt
