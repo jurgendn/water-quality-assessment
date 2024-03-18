@@ -6,7 +6,13 @@ from typing import Literal
 
 @dataclass
 class TypeHint:
-    MODEL_NAME = Literal["r18", "r34", "r50"]
+    BACKBONE_NAME = Literal["r18", "r34", "r50"]
+
+
+@dataclass
+class ModelName:
+    RESNET_ATTENTION = "resnet_attention"
+    RESNET_NO_ATTENTION = "resnet_no_attention"
 
 
 @dataclass
@@ -40,6 +46,7 @@ class DataPath:
     TARGET_DATA = os.path.join(BASE_PATH, "ref_EEM.pkl")
     WATER_DEPTH = os.path.join(BASE_PATH, "water-depth.pkl")
 
+
 @dataclass
 class DataLoader:
     TARGET_FEATURES = [
@@ -71,19 +78,23 @@ class DataLoader:
 @dataclass
 class ModelConfigs:
     R18 = {
-        "model_name": "r18",
+        "model_name": ModelName.RESNET_NO_ATTENTION,
+        "backbone_name": "r18",
         "kwargs": {
             "lr": 1e-3,
-            "model_name": "r18",
+            "model_name": ModelName.RESNET_NO_ATTENTION,
+            "backbone_name": "r18",
             "num_classes": len(DataLoader.TARGET_FEATURES),
             "return_layers": {"layer1": "output"},
         },
     }
     R34 = {
-        "model_name": "r34",
+        "model_name": ModelName.RESNET_ATTENTION,
+        "backbone_name": "r34",
         "kwargs": {
             "lr": 4e-3,
-            "model_name": "r34",
+            "model_name": ModelName.RESNET_ATTENTION,
+            "backbone_name": "r34",
             "num_classes": len(DataLoader.TARGET_FEATURES),
             "return_layers": {"layer2": "output"},
         },

@@ -8,21 +8,26 @@ from models.modules.resnet_no_attention import ResNetBackboneWithoutAttention
 
 from .base_model.regression import LightningRegression
 from .metrics.regression import regression_metrics
+from models import MODEL_DICT
 
 
 class LitModule(LightningRegression):
     def __init__(
         self,
         lr: float,
-        model_name: TypeHint.MODEL_NAME,
+        backbone_name: TypeHint.BACKBONE_NAME,
+        model_name: str,
         num_classes: int,
         return_layers: Dict[str, str],
     ) -> None:
         super(LitModule, self).__init__()
         self.save_hyperparameters()
         self.lr = lr
-        self.model = ResNetBackboneWithoutAttention(
-            model_name=model_name, num_classes=num_classes, return_layers=return_layers
+        model_blueprint = MODEL_DICT.get(model_name)
+        self.model = model_blueprint(
+            backbone_name=backbone_name,
+            num_classes=num_classes,
+            return_layers=return_layers,
         )
 
     def forward(self, x: Tensor) -> Tensor:
