@@ -1,0 +1,40 @@
+data_config:
+  batch_size: 32
+  train_val_ratio: 0.2
+  target_features: [
+      "W.T.",
+      "pH",
+      "DO",
+      "EC",
+      "BOD5",
+      "CODMn",
+      "SS",
+      "TN",
+      "TP",
+      "TOC",
+      "DOC",
+      "Chl-a",
+      # "TN,",
+      "NH3-N",
+      # "NO3-N",
+      "DTP",
+      "PO4-P",
+    ]
+model_config:
+  model_name: resnet34
+  backbone_name: resnet34
+  attention_type: sagan
+  num_classes: 12
+  return_layers:
+    layer2: output
+
+optimizer_config:
+  lr: 4e-3
+  lr_scheduler_step_size: 50
+  lr_scheduler_factor: 0.5
+  lr_scheduler_monitor: training/mape
+
+trainer_config:
+  accelerator: auto
+  log_every_n_steps: 1
+  max_epochs: 100
