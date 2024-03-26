@@ -1,6 +1,6 @@
 import pickle
 from argparse import ArgumentParser
-
+import random
 import yaml
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import WandbLogger
@@ -17,6 +17,7 @@ def train():
     parsers.add_argument("--target-data", dest="target_data")
     parsers.add_argument("--water-depth", dest="water_depth", default=None)
     parsers.add_argument("--config-path", dest="config_path", default=None)
+    parsers.add_argument("--epochs", dest="epochs", default=500)
     args = parsers.parse_args()
 
     with open(file=args.config_path, mode="r") as f:
@@ -47,7 +48,7 @@ def train():
     trainer_config = TrainerConfig(
         accelerator=config["trainer_config"]["accelerator"],
         log_every_n_steps=config["trainer_config"]["log_every_n_steps"],
-        max_epochs=config["trainer_config"]["max_epochs"],
+        max_epochs=args.epochs,
     )
 
     with open(file=data_config.input_data, mode="rb") as f:
@@ -81,4 +82,5 @@ def train():
 
 
 if __name__ == "__main__":
+    random.seed(a=42)
     train()

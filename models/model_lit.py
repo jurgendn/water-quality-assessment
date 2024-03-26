@@ -14,6 +14,7 @@ class LitModule(LightningRegression):
     def __init__(self, model_config: ModelConfig, optimizer: OptimizerConfig) -> None:
         super(LitModule, self).__init__()
         self.save_hyperparameters()
+        self._log_hyperparams = True
         self.model_config = model_config
         self.optimizer = optimizer
         self.model = BlahBlahModel(model_config=model_config)
