@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.DS_Store
+wandb/
+Water Quality Assessment/
 # C extensions
 *.so
 dataset/
