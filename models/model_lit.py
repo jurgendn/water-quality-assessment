@@ -1,34 +1,22 @@
-from typing import Dict
 import torch
 from torch import Tensor, optim
 from torch.nn import functional as F
+from torch.optim.lr_scheduler import LRScheduler
 
-from config import TypeHint
-from models.modules.resnet_no_attention import ResNetBackboneWithoutAttention
+from config.factory import ModelConfig, OptimizerConfig
+from models.model import BlahBlahModel
 
 from .base_model.regression import LightningRegression
 from .metrics.regression import regression_metrics
-from models import MODEL_DICT
 
 
 class LitModule(LightningRegression):
-    def __init__(
-        self,
-        lr: float,
-        backbone_name: TypeHint.BACKBONE_NAME,
-        model_name: str,
-        num_classes: int,
-        return_layers: Dict[str, str],
-    ) -> None:
+    def __init__(self, model_config: ModelConfig, optimizer: OptimizerConfig) -> None:
         super(LitModule, self).__init__()
         self.save_hyperparameters()
-        self.lr = lr
-        model_blueprint = MODEL_DICT.get(model_name)
-        self.model = model_blueprint(
-            backbone_name=backbone_name,
-            num_classes=num_classes,
-            return_layers=return_layers,
-        )
+        self.model_config = model_config
+        self.optimizer = optimizer
+        self.model = BlahBlahModel(model_config=model_config)
 
     def forward(self, x: Tensor) -> Tensor:
         y = self.model(x)
@@ -38,8 +26,20 @@ class LitModule(LightningRegression):
         return F.mse_loss(input=input, target=target)
 
     def configure_optimizers(self):
-        optimizer = optim.Adam(params=self.parameters(), lr=self.lr)
-        return optimizer
+        optimizer = optim.Adam(params=self.parameters(), lr=self.optimizer.lr)
+        scheduler = {
+            "scheduler": optim.lr_scheduler.StepLR(
+                optimizer=optimizer,
+                step_size=self.optimizer.lr_scheduler_step_size,
+                gamma=self.optimizer.lr_scheduler_factor,
+            ),
+            "interval": "epoch",
+            "monitor": self.optimizer.lr_scheduler_monitor,
+        }
+        return [optimizer], [scheduler]
+
+    def lr_scheduler_step(self, scheduler: LRScheduler, metric):
+        scheduler.step()
 
     def training_step(self, batch, batch_idx):
         x, y = batch

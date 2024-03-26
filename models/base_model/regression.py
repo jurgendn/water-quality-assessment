@@ -39,7 +39,9 @@ class LightningRegression(LightningModule):
         for key in self.log_value_list:
             val = self.__average(key=key, outputs=self.train_step_output)
             log_name = f"training/{key}"
-            self.log(name=log_name, value=val, prog_bar=True, on_epoch=True)
+            self.log(
+                name=log_name, value=val, prog_bar=True, on_epoch=True, on_step=False
+            )
 
     @torch.no_grad()
     @abstractmethod
@@ -51,4 +53,6 @@ class LightningRegression(LightningModule):
         for key in self.log_value_list:
             val = self.__average(key=key, outputs=self.validation_step_output)
             log_name = f"val/{key}"
-            self.log(name=log_name, value=val, prog_bar=True, on_epoch=True)
+            self.log(
+                name=log_name, value=val, prog_bar=True, on_epoch=True, on_step=False
+            )
